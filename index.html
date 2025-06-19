@@ -207,6 +207,7 @@
       <p><br>Map developed and maintained by <br><br><a href="mailto:josh.knight@vermont.gov">
         Joshua Knight</a><br>
         Agriculture Development Specialist<br>
+        Vermont Agency of Agriculture, Food & Markets
 
     </div>
 
@@ -316,8 +317,11 @@
           var props = feature.properties;
           var locationPopup =
             "<h1>" + props.type + "<br><img src='./icons/overlook.png'><br></h1><h2>"+ props.name + "</h2>"
-            + "<br><b>Land Use Designation<h3>" + props.option2
-            + "</h3>Nearest Bathroom<h3>" + props.option1;
+            + "<br><b>Designation<b><br>" + props.option2
+            + "</b><br><br>Vehicle & Access<br><img src='" + props.email + "'></a>  " + "<img src='" + props.street + "'></a>  " + "<img src='" 
+             + props.city + "'>" + "<img src='" + props.state + "'>" + "<img src='" + props.zip + "'>"
+            + "<img src='" + props.www + "'>"  
+            ;
             layer.bindPopup(locationPopup);
         }
       }).addTo(map);
