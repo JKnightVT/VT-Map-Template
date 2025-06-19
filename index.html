@@ -136,22 +136,33 @@
 
 
   h1 {
-    color: #005d7e;
+    color: #216e33;
     font-weight: bold;
-    font-size: 125%;
+    font-size: 200%;
+    text-align: right;
   }
   h2 {
-      color: #005d7e;
+      color: #216e33;
       font-weight: bold;
       font-size: 115%;
   }
   h3 {
-      color: #005d7e;
+      color: #216e33;
       font-weight: bold;
       font-size: 105%;
   }
   h4 {
       color: #ff1a00;
+      font-weight: bold;
+      font-size: 120%;
+  }
+  h5 {
+      color: #da350c;
+      font-weight: bold;
+      font-size: 120%;
+  }
+  h6 {
+      color: #0066ffd2;
       font-weight: bold;
       font-size: 120%;
   }
@@ -193,10 +204,6 @@
         <h2>Data Sources</h2><br>
           <p>The primary data source is fabricated for the purpose of demonstrating the capabilities of an interactive map.<br><br>
           </p>
-        <p><br>
-        Funding and support for this project provided by the <a href="https://agpolicy.ky.gov/board/Pages/default.aspx" target="_blank">Kentucky Agricultural
-          Development Board</a> through the <a href="http://kyhortcouncil.org/" target="_blank">
-            Kentucky Horticulture Council</a>.</p>
       <p><br>Map developed and maintained by <br><br><a href="mailto:josh.knight@vermont.gov">
         Joshua Knight</a><br>
         Agriculture Development Specialist<br>
@@ -216,47 +223,59 @@
   <script src="https://rawgit.com/MarcChasse/leaflet.ScaleFactor/master/leaflet.scalefactor.min.js"></script>
   <script>
 
-  // initialize map, centered on KY
-  var southWest = L.latLng(35.51, -90.29),
-      northEast = L.latLng(40.24, -80.69),
+  // initialize map, centered on Vermont
+  var southWest = L.latLng(42.509, -74.018),
+      northEast = L.latLng(48.384, -71.003),
       bounds = L.latLngBounds(southWest, northEast);
 
   var map = L.map('map', {
       zoomSnap: .05,
-      center: [37.839333, -85.7],
+      center: [43.89, -72.74],
       maxBounds: bounds,
-      zoom: 7.5,
-      minZoom: 6.5,
+      zoom: 8.5,
+      minZoom: 8,
       maxZoom: 18,
     });
 
   // request a mapbox raster tile layer and add to map
      L.tileLayer.provider('USGS.USTopo').addTo(map);
 
-  // set display style for county polygons
-    var countyStyle = {
-        "color": "#005d7e",
-        "weight": 2,
+  // set display style for polygons
+    var shapeStyle = {
+        "color": "#245434",
+        "weight": 1,
         "fillOpacity" : 0.1,
         "opacity": 0.5
     };
 
     // set icons for layer types
-    var cutflowerIcon = L.icon({
-        iconUrl: "./icons/cutflower-yellow.png",
+    var farmersMarketIcon = L.icon({
+        iconUrl: "./icons/farmstand.png",
+        iconSize: [35, 35],
+        popupAnchor: [0, -15]
+    });
+
+    var overlookIcon = L.icon({
+        iconUrl: "./icons/overlook.png",
+        iconSize: [35, 35],
+        popupAnchor: [0, -15]
+    });
+
+    var publicParkIcon = L.icon({
+        iconUrl: "./icons/publicpark.png",
         iconSize: [35, 35],
         popupAnchor: [0, -15]
     });
 
 
-    // load KY county polygons
-  $.getJSON("./data/ky-counties.geojson", function(counties) {
+    // load VT administrative boundary (town) polygons
+  $.getJSON("./data/VT-Towns WGS84.geojson", function(shape) {
 
-        // load CSV file
-        omnivore.csv('data/FlowerGrowerDirectory2023.csv')
+        // load data points as CSV file
+        omnivore.csv('data/VTSampleData.csv')
         .on('ready', function(e) {
             drawMap(e.target.toGeoJSON());
-            addDataToMap(counties, countyStyle, map);
+            addDataToMap(shape, shapeStyle, map);
         })
         .on('error', function(e) {
             console.log(e.error);
@@ -270,17 +289,53 @@
 
     console.log(data);
 
-    var cutflowerLayer = L.geoJson(data, {
-      filter: cutflowerFilter,
+    var farmersMarketLayer = L.geoJson(data, {
+      filter: farmersMarketFilter,
       pointToLayer: function(feature,latlng) {
-          return L.marker(latlng, {icon: cutflowerIcon});
+          return L.marker(latlng, {icon: farmersMarketIcon});
         },
         onEachFeature : function(feature,layer) {
           var props = feature.properties;
           var locationPopup =
-            "<h3>" + props.name + "</h3><br><b>Sales Outlet(s):  </b>" + props.markets + "<br>"
-            + "<br><b>Social Media:</b>  <BR><a href='" + props.facebook + "'><img src='" + props.fbIcon + "'></a>   "
+            "<h1>" + props.type + "<br><img src='./icons/farmstand.png'><br></h1><h2>" 
+              + props.name + "</h2>" + "<h5>Summer Market<br>" + props.option2 + "</h5><h6>Winter Market<br>" + props.option3 
+            + "</h6><br><b>Social Media</b>  <BR><a href='" + props.facebook + "'><img src='" + props.fbIcon + "'></a>   "
             + "<a href='" + props.instagram + "'><img src='" + props.instaIcon + "'></a>"
+            + "<br><br><b>Contact Info</b><br>" + props.option1 + "<br><a href='" + props.www + "'>" + props.www + "</a><br><a href='mailto:" + props.email + "'>" + props.email
+            + "</a></p></p>";
+            layer.bindPopup(locationPopup);
+        }
+      }).addTo(map);
+
+    var overlookLayer = L.geoJson(data, {
+      filter: overlookFilter,
+      pointToLayer: function(feature,latlng) {
+          return L.marker(latlng, {icon: overlookIcon});
+        },
+        onEachFeature : function(feature,layer) {
+          var props = feature.properties;
+          var locationPopup =
+            "<h1>" + props.type + "<br><img src='./icons/overlook.png'><br></h1><h2>"+ props.name + "</h2>"
+            + "<br><b>Land Use Designation<h3>" + props.option2
+            + "</h3>Nearest Bathroom<h3>" + props.option1;
+            layer.bindPopup(locationPopup);
+        }
+      }).addTo(map);
+
+    var publicParkLayer = L.geoJson(data, {
+      filter: publicParkFilter,
+      pointToLayer: function(feature,latlng) {
+          return L.marker(latlng, {icon: publicParkIcon});
+        },
+        onEachFeature : function(feature,layer) {
+          var props = feature.properties;
+          var locationPopup =
+            "<h1>" + props.type + "<br><img src='./icons/publicpark.png'><br></h1><h2>"+ props.name + 
+            "</h2><br><b>Toilets:  </b><h3>" + props.option1 + 
+            "</h3><b>Fireplaces:  </b><h3>" + props.option2 +"</h3>"
+            + "<br><b>Social Media</b>  <BR><a href='" + props.facebook + "'><img src='" + props.fbIcon + "'></a>   "
+            + "<a href='" + props.instagram + "'><img src='" + props.instaIcon + "'></a>"
+
             + "<br><br><a href='" + props.www + "'>" + props.www + "</a><br><a href='mailto:" + props.email + "'>" + props.email
             + "</a></p></p>";
             layer.bindPopup(locationPopup);
@@ -288,30 +343,30 @@
       }).addTo(map);
 
     // create object of all layers
-    // var geoJsonLayers = {
-    //       marketLayer: marketLayer,
-    //       greenhouseLayer: greenhouseLayer,
-    //       equipmentLayer: equipmentLayer,
-    //       auctionLayer: auctionLayer,
-    //       hortsupplyLayer: hortsupplyLayer,
-    //       waterlabLayer: waterlabLayer,
-    //       farmstandLayer: farmstandLayer,
-    //       agtourismLayer: agtourismLayer,
-    // };
+    var geoJsonLayers = {
+          farmersMarketLayer: farmersMarketLayer,
+          overlookLayer: overlookLayer,
+          publicParkLayer: publicParkLayer,
+          // auctionLayer: auctionLayer,
+          // hortsupplyLayer: hortsupplyLayer,
+          // waterlabLayer: waterlabLayer,
+          // farmstandLayer: farmstandLayer,
+          // agtourismLayer: agtourismLayer,
+    };
 
     // legend for turning on/off layers
-    // var sourcesLabels = {
-    //   "<img src='icons/flower.png' height='35' width='35'><b>&nbsp;Educational Greenhouse</b>": geoJsonLayers.greenhouseLayer,
-    //   "<img src='icons/shop.png' height='34' width='35'><b>&nbsp;Farmers' Market</b>": geoJsonLayers.marketLayer,
-    //   "<img src='icons/auction.png' height='34' width='35'><b>&nbsp;Produce Auction</b>": geoJsonLayers.auctionLayer,
-    //   "<img src='icons/equipment.png' height='29' width='39'><b>&nbsp;Shared Equipment</b><br><br>": geoJsonLayers.equipmentLayer,
-    //   "<img src='icons/hortsupply.png' height='39' width='39'><b>&nbsp;Horticultural Supply Store</b>": geoJsonLayers.hortsupplyLayer,
-    //   "<img src='icons/waterlab.png' height='39' width='39'><b>&nbsp;Water Testing Lab</b>": geoJsonLayers.waterlabLayer,
-    //   "<img src='icons/farmstand.png' height='36' width='36'><b>&nbsp;Roadside Market</b>": geoJsonLayers.farmstandLayer,
-    //   "<img src='icons/agtourism.png' height='36' width='36'><b>&nbsp;Agritourism Venue</b>": geoJsonLayers.agtourismLayer,
-    // };
+    var sourcesLabels = {
+      "<img src='icons/farmstand.png' height='35' width='35'><b>&nbsp;Farmers Market</b>": geoJsonLayers.farmersMarketLayer,
+      "<img src='icons/overlook.png' height='34' width='35'><b>&nbsp;Scenic Overlook</b>": geoJsonLayers.overlookLayer,
+      "<img src='icons/publicpark.png' height='34' width='35'><b>&nbsp;Public Park</b>": geoJsonLayers.publicParkLayer,
+      // "<img src='icons/equipment.png' height='29' width='39'><b>&nbsp;Shared Equipment</b><br><br>": geoJsonLayers.equipmentLayer,
+      // "<img src='icons/hortsupply.png' height='39' width='39'><b>&nbsp;Horticultural Supply Store</b>": geoJsonLayers.hortsupplyLayer,
+      // "<img src='icons/waterlab.png' height='39' width='39'><b>&nbsp;Water Testing Lab</b>": geoJsonLayers.waterlabLayer,
+      // "<img src='icons/farmstand.png' height='36' width='36'><b>&nbsp;Roadside Market</b>": geoJsonLayers.farmstandLayer,
+      // "<img src='icons/agtourism.png' height='36' width='36'><b>&nbsp;Agritourism Venue</b>": geoJsonLayers.agtourismLayer,
+    };
 
-    // L.control.layers(null, sourcesLabels, { collapsed:true }).addTo(map);
+    L.control.layers(null, sourcesLabels, { collapsed:true }).addTo(map);
 
     // info modal code
     var modal = document.getElementById('myModal');
@@ -336,8 +391,14 @@
 
 
     // filtering functions for creating multiple layers from single geojson
-    function cutflowerFilter(feature) {
-      if (feature.properties.type === "Cut Flower Grower") return true
+    function farmersMarketFilter(feature) {
+      if (feature.properties.type === "Farmers Market") return true
+    }
+    function overlookFilter(feature) {
+      if (feature.properties.type === "Scenic Overlook") return true
+    }
+    function publicParkFilter(feature) {
+      if (feature.properties.type === "Public Park") return true
     }
 
   } // end drawMap()
@@ -346,7 +407,7 @@
       var dataLayer = L.geoJson(data, {
         style: style,
         onEachFeature: function (feature, layer) {
-              layer.bindTooltip("<h2>" + feature.properties.name + " County</h2>");
+              layer.bindTooltip("<h2>" + feature.properties.TOWNNAMEMC + "</h2>");
         }
       });
       dataLayer.addTo(map);
