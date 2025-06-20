@@ -198,6 +198,11 @@
       <span class="close">&times;</span>
       <p><h2>About This Map</h2><br>
         This interactive map is meant to demonstrate the basic functions of an interactive map using the LeafletJS Library.</p><br>
+      
+      <p><u><h2>Code Libraries</h2></u><br>
+          <a href="https://labs.mapbox.com/assembly/">Mapbox Assembly</a><br>
+          <a href="https://jquery.com/">JQuery</a><br>
+          <a href="https://leafletjs.com/">LeafletJS</a><br></p><br>
         <h2>Using This Map</h2><br>
         <p><b>Clicking/tapping</b> an icon on the map shows shows detail.</p><br>
         <p>The +/- buttons at the top left <b>zoom in and out</b>, as does the mouse wheel, and standard mobile gestures.</p><br>
@@ -224,7 +229,7 @@
   <script src="https://rawgit.com/MarcChasse/leaflet.ScaleFactor/master/leaflet.scalefactor.min.js"></script>
   <script>
 
-  // initialize map, centered on Vermont
+  // initialize map, centered on Vermont at load
   var southWest = L.latLng(42.509, -74.018),
       northEast = L.latLng(48.384, -71.003),
       bounds = L.latLngBounds(southWest, northEast);
