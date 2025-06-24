@@ -138,33 +138,33 @@
   h1 {
     color: #216e33;
     font-weight: bold;
-    font-size: 200%;
+    font-size: 175%;
     text-align: right;
   }
   h2 {
       color: #216e33;
       font-weight: bold;
-      font-size: 115%;
+      font-size: 125%;
   }
   h3 {
       color: #216e33;
       font-weight: bold;
-      font-size: 105%;
+      font-size: 115%;
   }
   h4 {
       color: #ff1a00;
       font-weight: bold;
-      font-size: 120%;
+      font-size: 175%;
   }
   h5 {
-      color: #da350c;
+      color: #a04027;
       font-weight: bold;
-      font-size: 120%;
+      font-size: 100%;
   }
   h6 {
-      color: #0066ffd2;
+      color: #326bc0d2;
       font-weight: bold;
-      font-size: 120%;
+      font-size: 100%;
   }
   a {
       color: #005d7e;
@@ -277,7 +277,7 @@
     // load VT administrative boundary (town) polygons
   $.getJSON("./data/VT-Towns WGS84.geojson", function(shape) {
 
-        // load data points as CSV file
+        // load data points as CSV file... if using emoji in datafile, you must encode CSV as UTF-8
         omnivore.csv('data/VTSampleData.csv')
         .on('ready', function(e) {
             drawMap(e.target.toGeoJSON());
@@ -304,11 +304,12 @@
           var props = feature.properties;
           var locationPopup =
             "<h1>" + props.type + "<br><img src='./icons/farmstand.png'><br></h1><h2>" 
-              + props.name + "</h2>" + "<h5>Summer Market<br>" + props.option2 + "</h5><h6>Winter Market<br>" + props.option3 
-            + "</h6><br><b>Social Media</b>  <BR><a href='" + props.facebook + "'><img src='" + props.fbIcon + "'></a>   "
+              + props.name + "</h2><br><b>Location</b><br>" + props.column2 + "<br>" + props.column3 + " " + props.column4 + ", " + props.column5 
+              + "<br><br><h5>Summer Market Season ☀️</h5><b>" + props.option2 + "</b><h6>Winter Market Season ❄️</h6><b>" + props.option3 
+            + "</h6><br><br>Social Media</b>  <BR><a href='" + props.facebook + "'><img src='" + props.fbIcon + "'></a>   "
             + "<a href='" + props.instagram + "'><img src='" + props.instaIcon + "'></a>"
-            + "<br><br><b>Contact Info</b><br>" + props.option1 + "<br><a href='" + props.www + "'>" + props.www + "</a><br><a href='mailto:" + props.email + "'>" + props.email
-            + "</a></p></p>";
+            + "<br><br><b>Contact Info</b><br>" + props.option1 + "<br><a href='" + props.column6 + "'>" + props.column6 
+            + "</a><br><a href='mailto:" + props.column1 + "'>" + props.column1 + "</a></p></p>";
             layer.bindPopup(locationPopup);
         }
       }).addTo(map);
@@ -323,9 +324,9 @@
           var locationPopup =
             "<h1>" + props.type + "<br><img src='./icons/overlook.png'><br></h1><h2>"+ props.name + "</h2>"
             + "<br><b>Designation<b><br>" + props.option2
-            + "</b><br><br>Vehicle & Access<br><img src='" + props.email + "'></a>  " + "<img src='" + props.street + "'></a>  " + "<img src='" 
-             + props.city + "'>" + "<img src='" + props.state + "'>" + "<img src='" + props.zip + "'>"
-            + "<img src='" + props.www + "'>"  
+            + "</b><br><br>Vehicle & Access<br><img src='" + props.column1 + "'></a>  " + "<img src='" + props.column2 + "'></a>  " + "<img src='" 
+             + props.column3 + "'>" + "<img src='" + props.column4 + "'>" + "<img src='" + props.column5 + "'>"
+            + "<img src='" + props.column6 + "'>"  
             ;
             layer.bindPopup(locationPopup);
         }
@@ -340,12 +341,11 @@
           var props = feature.properties;
           var locationPopup =
             "<h1>" + props.type + "<br><img src='./icons/publicpark.png'><br></h1><h2>"+ props.name + 
-            "</h2><br><b>Toilets:  </b><h3>" + props.option1 + 
-            "</h3><b>Fireplaces:  </b><h3>" + props.option2 +"</h3>"
+            "</h2><br><b>Amenities</b><b><h4>" + props.option1 + "</h4>"
             + "<br><b>Social Media</b>  <BR><a href='" + props.facebook + "'><img src='" + props.fbIcon + "'></a>   "
             + "<a href='" + props.instagram + "'><img src='" + props.instaIcon + "'></a>"
 
-            + "<br><br><a href='" + props.www + "'>" + props.www + "</a><br><a href='mailto:" + props.email + "'>" + props.email
+            + "<br><br><a href='" + props.column6 + "'>State Webpage</a><br><a href='mailto:" + props.column1 + "'>" + props.column1
             + "</a></p></p>";
             layer.bindPopup(locationPopup);
         }
