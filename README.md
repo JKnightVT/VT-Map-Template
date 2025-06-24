@@ -4,6 +4,11 @@ The purpose of the repository is to create a simple, interactive map showing the
 
 All included libraries are open-source and free.
 
+# Datafile format
+
+UTF-8 CSV
+[VTSampleData.csv](https://github.com/JKnightVT/VT-Map-Template/blob/main/data/VTSampleData.csv)
+
 # View Interactive Map Template
 
 [click here to load the Vermont Interactive Map Template from this repository](https://jknightvt.github.io/VT-Map-Template/)
